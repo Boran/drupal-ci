@@ -1,0 +1,14 @@
+---
+- hosts: 127.0.0.1
+  connection: local
+
+  vars_files:
+    - ../settings.yml
+
+  vars:
+    sitename: "{{ git_branch }}-build-{{ build_id }}.{{ url_prefix }}.{{ webserver_hostname }}"
+    sitepath: /var/www/html/{{ sitename }}
+    db_name: "{{ url_prefix }}_{{ git_branch }}_build_{{ build_id }}"
+
+  roles:
+    - destroy

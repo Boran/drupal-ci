@@ -1,0 +1,6 @@
+---
+- include: setup_init.yml
+- include: setup_database.yml
+- include: setup_files.yml
+- include: setup_tests.yml
+- include: setup_finalise.yml

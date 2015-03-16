@@ -1,0 +1,43 @@
+---
+- name: setup_files | make sure that data directory exists and is writable
+  file:
+    path={{ site_data_path }}/files
+    state=directory
+    mode=0777
+
+- name: setup_files | remove old files folders
+  shell: rm -Rf {{ site_data_path }}/files/*
+  sudo: true
+
+- name: setup_files | download site/files from local
+  shell: cp {{ localsrc }}/source-files/{{ url_prefix }}/* {{ site_data_path }}/files/
+  when: localdb_enable is defined and localdb_enable == "y"
+
+- name: setup_files | unpack new files
+  shell: cd {{ site_data_path }}/files && aunpack *.tar.gz
+  when: localdb_enable is defined and localdb_enable == "y"
+
+- name: setup_files | make private and temp files directories
+  file: path={{ sitepath }}/sites/default/private/tmp state=directory
+
+- name: setup_files | change private files permissions
+  file:
+      path={{ sitepath }}/sites/default/private
+      recurse=yes
+      mode=0777
+  sudo: true
+
+- name: setup_files | run drush registry rebuild
+  shell: cd {{ sitepath }} && drush rr --strict=0 --no-cache-clear
+  shell: cd {{ sitepath }} && drush cc all
+
+- name: setup_files | set tmp files folder
+  shell: cd {{ sitepath }} && drush vset --exact file_temporary_path sites/default/private/tmp
+
+- name: setup_files | set private files folder
+  shell: cd {{ sitepath }} && drush vset --exact file_private_path sites/default/private
+
+- name: setup_files | set public files folder
+  shell: cd {{ sitepath }} && drush vset --exact file_public_path sites/default/files
+
+

@@ -1,0 +1,11 @@
+---
+
+# Generic settings for all builds
+
+# Following variables are the same for all site builds
+#  site_data_path: '/home/builder/site-data/{{ url_prefix }}'
+#  #sitename: "{{ git_branch }}-build-{{ build_id }}.{{ url_prefix }}.{{ webserver_hostname }}"
+#  sitename: "{{ url_prefix }}-{{ git_branch }}-build-{{ build_id }}"
+#  sitepath: /var/www/html/{{ sitename }}
+#  db_name: "{{ url_prefix }}_{{ git_branch }}_build_{{ build_id }}"
+

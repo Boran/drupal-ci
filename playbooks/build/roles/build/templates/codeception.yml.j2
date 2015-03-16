@@ -1,0 +1,30 @@
+paths:
+    tests: tests
+    log: tests/_log
+    data: tests/_data
+    helpers: tests/_helpers
+settings:
+    bootstrap: _bootstrap.php
+    suite_class: \PHPUnit_Framework_TestSuite
+    colors: true
+    memory_limit: 1024M
+    log: true
+modules:
+    config:
+        WebDriver:
+            #url: 'http://{{ sitename }}/'
+            #url: 'http://{{ url_prefix }}/'
+            url: 'http://{{ webserver_hostname }}/{{ sitename }}'
+            browser: phantomjs
+            window_size: 1024x768
+            capabilities:
+              unexpectedAlertBehaviour: ‘accept’
+              #unexpectedAlertBehaviour: 'accept'
+              javascriptEnabled: true
+              resourceTimeout: 5000
+        Db:
+            dsn: 'mysql:host=localhost;dbname={{ db_name }}'
+            user: 'drupal'
+            password: {{ mysql_password }}
+            populate: false
+            cleanup: false

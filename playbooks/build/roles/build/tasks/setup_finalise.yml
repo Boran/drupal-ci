@@ -1,0 +1,14 @@
+---
+- name: setup_finalise | sanitise database and passwords email=build+%uid-drupal@example.ch
+  shell: cd {{ sitepath }} && drush sql-sanitize --sanitize-email="build+%uid-drupal@example.ch" -y
+  when: localdb_enable is defined and localdb_enable == "y"
+
+- name: setup_finalise | run drush updb
+  shell: cd {{ sitepath }} && drush updb -y
+
+- name: setup_finalise | revert all features
+  shell: cd {{ sitepath }} && drush fra -y
+  when: revert_features is defined and revert_features == "y"
+
+- name: setup_finalise | flush all caches
+  shell: cd {{ sitepath }} && drush cc all

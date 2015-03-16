@@ -1,0 +1,12 @@
+--- 
+- hosts: 127.0.0.1
+  connection: local
+
+  vars_files:
+    - ../settings.yml
+
+  vars:
+    # 12.01.2015: specify vars on the command line. 
+
+  roles:
+    - build

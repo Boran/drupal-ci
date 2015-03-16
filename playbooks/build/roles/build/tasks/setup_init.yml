@@ -1,0 +1,26 @@
+---
+- name: setup_init | git, pull the code from {{  git_repo }}
+  git:
+    repo={{ git_repo }}
+    dest={{ sitepath }}
+    version={{ git_branch }}
+    accept_hostkey=yes
+
+- name: setup_init | create settings.php
+  action: template src=settings.php.j2 dest={{ sitepath }}/sites/default/settings.php
+  #shell: cp {{ localsrc }}/source-other/settings.php {{ sitepath }}/sites/default/
+  when: localdb_enable is defined
+    and localdb_enable == "y"
+
+- name: setup_init | create settings.local.php with DB params
+  action: template src=settings.local.php.j2 dest={{ sitepath }}/sites/default/settings.local.php
+
+- name: setup_init | update htaccess
+  action: template src=htaccess.j2 dest={{ sitepath }}/.htaccess
+
+#- name: Site build | add reference of host to local hosts file
+#  lineinfile:
+#      dest='/etc/hosts'
+#      state=present
+#      line='127.0.0.1 {{ sitename }}'
+#  sudo: true

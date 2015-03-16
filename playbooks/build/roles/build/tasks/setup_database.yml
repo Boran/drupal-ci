@@ -1,0 +1,45 @@
+---
+- name: setup_database | create database
+  mysql_db:
+    name={{ db_name }}
+    state=present
+    collation=utf8_general_ci
+
+- name: setup_database | make sure that data directory exists and is writable
+  file:
+    path={{ site_data_path }}/databases
+    state=directory
+    mode=0777
+
+- name: setup_database | remove old databases
+  shell: rm -Rf {{ site_data_path }}/databases/*
+
+- name: setup_database | download DB from local source-dbs
+  shell: cp {{ localsrc }}/source-dbs/{{ url_prefix }}/* {{ site_data_path }}/databases/
+  when: localdb_enable is defined and localdb_enable == "y"
+
+
+- name: setup_database | unpack new database
+  shell: cd {{ site_data_path }}/databases && aunpack *sql.gz
+  when: localdb_enable is defined and localdb_enable == "y"
+
+- name: setup_database | rename new database
+  shell: cd {{ site_data_path }}/databases && mv *sql db.sql
+  when: localdb_enable is defined and localdb_enable == "y"
+
+- name: setup_database | import database
+  mysql_db:
+    name={{ db_name }}
+    state=import
+    target={{ site_data_path }}/databases/db.sql
+  when: localdb_enable is defined and localdb_enable == "y"
+
+- name: setup_database | db - give drupal user permission
+  shell: echo "grant all on {{ db_name }}.* to drupal@localhost identified by '{{ mysql_password }}' " |mysql 
+
+
+- name: setup_database | Install Drupal from profile 
+  shell: cd {{ sitepath }}/sites/default && drush site-install {{ drupal_profile }} -y --account-name=admin --account-pass={{ drupal_admin_pw }} --account-mail={{ drupal_admin_email }} --site-name={{ drupal_profile }} --site-mail={{ drupal_admin_email }} --db-url=mysqli://drupal:{{ mysql_password }}@localhost:3306/{{ db_name }}
+  when: drupal_profile is defined and drupal_profile != ''
+
+

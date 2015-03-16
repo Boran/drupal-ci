@@ -1,0 +1,28 @@
+<?php
+/**
+ * @file
+ * Environment-specific configuration file.
+ *
+ * The settings here are not version-controlled.  They threfore only apply to
+ * this environment.
+ */
+
+
+/**
+ * Database settings.
+ */
+$databases = array(
+  'default' => array(
+    'default' => array(
+      'driver'   => 'mysql',
+      'database' => '{{ db_name }}',
+      'username' => 'drupal',
+      'password' => '{{ mysql_password }}',
+      'host'     => 'localhost',
+    ),
+  ),
+);
+
+$update_free_access = TRUE;
+
+$base_url = 'http://{{ webserver_hostname }}/{{ sitename }}';  // NO trailing slash!

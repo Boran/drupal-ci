@@ -1,0 +1,25 @@
+---
+# Assume tests are already in the sources, or if local_tests put in
+# local ones
+- name: setup_tests | Download test suite from local
+  copy: src={{ localsrc }}/source-other/tests dest={{ sitepath }}
+  when: local_tests is defined and local_tests == "y"
+
+- name: setup_tests | setup tests _log directory
+  file:
+    path={{ sitepath }}/tests/tests/_log
+    state=directory
+    mode=0777
+
+- name: setup_tests | setup tests _data directory
+  file:
+    path={{ sitepath }}/tests/tests/_data
+    state=directory
+    mode=0777
+
+- name: setup_tests | create codeception.yml
+  action: template src=codeception.yml.j2 dest={{ sitepath }}/tests/codeception.yml 
+
+# build actor classes http://codeception.com/docs/02-GettingStarted
+- name: setup_tests | build codeception
+  shell: cd {{ sitepath }}/tests && codecept build
