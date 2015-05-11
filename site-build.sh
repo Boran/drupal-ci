@@ -21,9 +21,11 @@
 # Set drupal default pws: /drupal-admin-pw.txt /mysql-drupal-pw.txt
 
 GIT_BRANCH=$1
+
 BUILDID=$2
 SITENAME=$3
 GIT_REPO=$4
+
 #todo: exit if arguments 1-4 missing
 if [ -z "$5" ] ; then  # is demo db/files to be used?
    # no $5: no demo db, and no profile
@@ -78,7 +80,11 @@ fi
 
 # Following settings, used by ansible, were in playbooks/build/generic.yml,
 # move here for consistency
-fullname="$SITENAME-$GIT_BRANCH-build-$BUILDID";
+#fullname="$SITENAME-$GIT_BRANCH-build-$BUILDID";
+# Srip special characters from branch name
+branch=`echo $GIT_BRANCH|tr '\/' '-' `
+fullname="$SITENAME-$branch-build-$BUILDID";
+
 sitepath="$www/$fullname";
 site_data_path="$buildhome/site-data/$fullname";
 # db will be fullname with underscores (may not have dashes: mysql)
@@ -86,7 +92,7 @@ db_name=`echo $fullname|tr '-' '_' `
 
 
 echo "--------------------------------------------------------"
-echo "-- $0: Build $SITENAME from branch=$GIT_BRANCH $GIT_REPO with id=$BUILDID demo=$DEMO drupal_profile=$drupal_profile local_tests=$local_tests revert_features=$revert_features builddir=$builddir ."
+echo "-- $0: Build $SITENAME from branch=$GIT_BRANCH $GIT_REPO with id=$BUILDID demo=$DEMO drupal_profile=$drupal_profile local_tests=$local_tests revert_features=$revert_features builddir=$builddir fullname=$fullname db_name=$db_name."
 
 echo "-- ansible: init, database, files, test, finalise:"
 
