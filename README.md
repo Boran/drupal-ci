@@ -1,7 +1,7 @@
 Continuous Integration automated site build for Drupal
 ======================================================
 
-Intoduction
+Introduction
 -----------
 This image allows a container to be created for automatically building adn testing for Drupal websites, removetyl controlled  from jenkins.
 
